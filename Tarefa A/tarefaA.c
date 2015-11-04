@@ -16,10 +16,10 @@ typedef  enum boolean  bool;
 
 float x, y; //coordenadas
 float coord;
-double pi;
-long circle = 0;
-long total = 0;
-long shots;
+long double pi;
+unsigned long int circle = 0;
+unsigned long int total = 0;
+unsigned long int shots;
 pthread_mutex_t mutex;
 int cores;
 
@@ -33,14 +33,14 @@ bool piMonteCarlo(){
 	return false;	
 	
 }
-double openMP(){
+long double openMP(){
 	#pragma omp parallel for num_threads(cores)
 		for(int i =0; i<shots; i++) {
 			if(piMonteCarlo())
 				circle++;
 			total++;
 		}
-	pi = 4.0 * (((double)circle)/ ((double)total));
+	pi = 4.0 * (((long double)circle)/ ((long double)total));
 	return pi;	
 
 }
@@ -56,7 +56,7 @@ void *calculaPi(void *arg){ //calcula Pi pelas threads
 	
 	return 0;
 }
-double pthread(){
+long double pthread(){
 	pthread_t threads[cores];
 	
 	pthread_mutex_init(&mutex,NULL);
@@ -68,18 +68,18 @@ double pthread(){
 		pthread_join(threads[i], NULL);
 	
 		
-	return pi = 4.0 * (((double)circle)/ ((double)total));
+	return pi = 4.0 * (((long double)circle)/ ((long double)total));
 	
 }
 
-double sequencial(){ 
+long double sequencial(){ 
 	for(int i =0; i<shots; i++) {
 			
 			if(piMonteCarlo())
 				circle++;
 			total++;
 		}
-	pi = 4 * (((double)circle)/ ((double)total));
+	pi = 4 * (((long double)circle)/ ((long double)total));
 	return pi;
 }
 int main(int argc,  char *argv[]){
@@ -98,13 +98,13 @@ int main(int argc,  char *argv[]){
 		cores = atoi(argv[3]);
 	switch(choice){
 		case(0): 
-			printf("\n%f\n",sequencial());
+			printf("\n%Lf\n",sequencial());
 			return 0;
 		case(1): 
-			printf("\n%f\n",openMP());
+			printf("\n%Lf\n",openMP());
 			return 0;
 		case(2): 
-			printf("\n%f\n",pthread());
+			printf("\n%Lf\n",pthread());
 			return 0;
 	}
 }
