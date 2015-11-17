@@ -33,7 +33,7 @@ bool piMonteCarlo(){
 	return false;	
 	
 }
-long double openMP(){
+double openMP(){
 	int i;
 	#pragma omp parallel for num_threads(cores)
 		for(i =0; i<shots; i++) {
@@ -60,7 +60,7 @@ void *calculaPi(void *arg){ //calcula Pi pelas threads
 	
 	return 0;
 }
-long double pthread(){
+double pthread(){
 	pthread_t threads[cores];
 	pthread_mutex_init(&mutex,NULL);
 	int i;
@@ -75,7 +75,7 @@ long double pthread(){
 	
 }
 
-long double sequencial(){ 
+double sequencial(){ 
 	int i;
 	for(i =0; i<shots; i++) {
 			
@@ -87,6 +87,8 @@ long double sequencial(){
 	return pi;
 }
 int main(int argc,  char *argv[]){
+	clock_t start,end;
+	double tempo, result;
 	int choice;
 	cores = NUM_CORES;
 	if (argc<=2){
@@ -102,14 +104,27 @@ int main(int argc,  char *argv[]){
 		cores = atoi(argv[3]);
 	switch(choice){
 		case(0): 
-			printf("\n%Lf\n",sequencial());
-			return 0;
+			start = clock();
+			result = sequencial();
+			end= clock();
+			break;
 		case(1): 
-			printf("\n%Lf\n",openMP());
-			return 0;
+			start = clock();
+			result = openMP();
+			end= clock();
+			break;
+			
 		case(2): 
-			printf("\n%Lf\n",pthread());
-			return 0;
-	}
-}
+			start = clock();
+			result = pthread();
+			end= clock();
+			break;
+			
+		default:
+			printf("Opção invélida.\n");
+			break;
 
+	
+	}
+	printf("%f\t%f\n", (tempo = (end-start)/(double)CLOCKS_PER_SEC), result);
+}
