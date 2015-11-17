@@ -17,9 +17,9 @@ typedef  enum boolean  bool;
 float x, y; //coordenadas
 float coord;
 long double pi;
-unsigned long int circle = 0;
-unsigned long int total = 0;
-unsigned long int shots;
+int circle = 0;
+int total = 0;
+int shots;
 pthread_mutex_t mutex;
 int cores;
 
@@ -34,46 +34,50 @@ bool piMonteCarlo(){
 	
 }
 long double openMP(){
+	int i;
 	#pragma omp parallel for num_threads(cores)
-		for(int i =0; i<shots; i++) {
+		for(i =0; i<shots; i++) {
 			if(piMonteCarlo())
 				circle++;
 			total++;
 		}
+
 	pi = 4.0 * (((long double)circle)/ ((long double)total));
 	return pi;	
 
 }
 void *calculaPi(void *arg){ //calcula Pi pelas threads
-	for(int i =0; i<shots/cores; i++) {
+	int i;
+	//int *n = (int*)arg;
+	//printf("%d\n",n );
+	for(i =0; i<shots; i++) {
 		pthread_mutex_lock(&mutex);
 		if(piMonteCarlo())
 			circle++;			
 		total++;
 		pthread_mutex_unlock(&mutex);
 	}
-	pthread_exit(0);
 	
 	return 0;
 }
 long double pthread(){
 	pthread_t threads[cores];
-	
 	pthread_mutex_init(&mutex,NULL);
-	
-	for(int i = 0; i < cores; i++)
-		pthread_create(&(threads[i]), NULL, &calculaPi, NULL);
+	int i;
 
-	for(int i = 0; i < cores; i++)
+	for(i = 0; i < cores; i++)
+		pthread_create(&(threads[i]), NULL, &calculaPi, &i);
+
+	for(i = 0; i < cores; i++)
 		pthread_join(threads[i], NULL);
 	
-		
 	return pi = 4.0 * (((long double)circle)/ ((long double)total));
 	
 }
 
 long double sequencial(){ 
-	for(int i =0; i<shots; i++) {
+	int i;
+	for(i =0; i<shots; i++) {
 			
 			if(piMonteCarlo())
 				circle++;
