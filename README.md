@@ -1,7 +1,11 @@
 # Trabalho-IPPD
 ## Execução tarefa A:
 	$ make
-	./Executável Nºtiros Abordagem (opcional)Nºthreads  
+	./Executável Nºtiros Abordagem (opcional)Nºthreads 
+## Execução exex.sh para tarefa A:
+	$ chmod 777 exec.sh
+	$ ./exec.sh N°tiros Abordagem N°threads
+	Gera um arquivo saida(N°tiros).txt com 30 execuções.
 ## Execução tarefa B:
 	$ make
 	mpirun Executável Nºtiros Abordagem (opcional)Nºthreads ||
